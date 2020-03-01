@@ -5,7 +5,7 @@ import './App.css';
 class App extends Component {
   
     state = {
-          ID : 0,
+          ID : '',                  //pokeName or pokeID
           pokeId : 0,
           pokeName : '',
           pokeType : '',
@@ -16,71 +16,98 @@ class App extends Component {
           pokeAbility2 : '',
           pokePhotoBack : '',
           pokePhotoFront : '',
+          Next : false,             //allows to stick to one pokemon in the pokedex
+          init: false,              //initialisation pb avec initialisation ligne 60 apparemment
       }    
   
     // function for binding but I don't understand why do we have to bind it
-    //I would like to put ID in argument in getData but it raises an error, I don't know why
-    //So I put ID in state but ID should be a name or a figure so there is a type problem
-    getData = () => {
-        fetch(`https://pokeapi.co/api/v2/pokemon/pikachu/`)
+    // in tsx arguments' type have to be indicated in the brackets
+    getData = (ID : number | string) => {
+        fetch(`https://pokeapi.co/api/v2/pokemon/${ID}/`)
         .then((response) => {
           return response.json();
         })          
         .then((data) => {this.setState({
           pokeId : data.id,
-          pokeName : data.name,
+          pokeName : data.name.toUpperCase(),
           pokeType : data.types[0].type.name,
           pokeAbility1 : data.abilities[0].ability.name,
           pokeAbility2 : data.abilities[1].ability.name,
           pokeCategory : data.species.name,
           pokeHeight : data.height,
-          pokeWeight : data.weight,
+          pokeWeight : data.weight / 10,
           pokePhotoBack : data.sprites.back_default,
           pokePhotoFront : data.sprites.front_default,
+          Next : false,
         })})
       }
+    //fx for binding
+    handleChange = (input : string | number) => (event : any) => {
+        this.setState({[input]: event.target.value});
+      };
+
+    //fx to change the pokémon we are looking at in the pokedex on click
+    handleClick = () => this.setState ({
+        Next : !this.state.Next,
+        init : true }) ;
 
     render () {
-      
-      const {pokeId, pokeName, pokeType, pokeAbility1, pokeAbility2, pokeCategory, pokeHeight,pokeWeight, pokePhotoBack, pokePhotoFront} = this.state;
 
-      this.getData();
+      const {pokeId, pokeName, pokeType, pokeAbility1, pokeAbility2, pokeCategory, pokeHeight,pokeWeight, pokePhotoBack, pokePhotoFront,Next,init} = this.state;
+      let {ID} = this.state;
 
-      return(
-      <div> 
-          <h1> Votre Pokédex </h1>
-          <br/>
-            <img> {pokePhotoBack}</img>
-            <img> {pokePhotoFront}</img>
-            <h2> {pokeName} No {pokeId} </h2><br/>
-            <h3>Taille : 0.{pokeHeight}m</h3><br/>
-            <h3>Poids : {pokeWeight}kg</h3><br/>
-            <h3>Catégorie : {pokeCategory}</h3><br/>
-            <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3><br/>
-            <h3>Type : {pokeType}</h3><br/>
-      </div>
-      )
+      if (init===false){
+        <div style={{textAlign: "center",}}>
+          <h1> Pokédex </h1> <br/>
+          <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')}/>
+          <button onClick={this.handleClick} >Rechercher</button>
+        </div>
+
+      }
+
+      else if (init===true) {
+        if (Next===false){
+          return(
+            <div style={{textAlign: "center",}}>
+              <h1> Pokédex </h1> <br/>
+              <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')}/>
+              <button onClick={this.handleClick} >Rechercher</button>
+              <h2> {pokeName} No {pokeId} </h2><br/>
+              <img src = {pokePhotoFront}/>
+              <img src = {pokePhotoBack}/>
+              <h3>Taille : 0.{pokeHeight}m</h3><br/>
+              <h3>Poids : {pokeWeight}kg</h3><br/>
+              <h3>Catégorie : {pokeCategory}</h3><br/>
+              <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3><br/>
+              <h3>Type : {pokeType}</h3><br/>   
+            </div>
+            )
+          }
+  
+  
+        else if (Next ===true )
+          {
+            this.getData (ID);
+            return(
+              <div style={{textAlign: "center",}}> 
+                <h1> Pokédex </h1> <br/>
+                <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')} />
+                <button onClick={this.handleClick} >Rechercher</button>
+                  <h2> {pokeName} No {pokeId} </h2><br/>
+                  <img src = {pokePhotoFront}/>
+                  <img src = {pokePhotoBack}/>
+                  <h3>Taille : 0.{pokeHeight}m</h3><br/>
+                  <h3>Poids : {pokeWeight}kg</h3><br/>
+                  <h3>Catégorie : {pokeCategory}</h3><br/>
+                  <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3><br/>
+                  <h3>Type : {pokeType}</h3><br/>          
+              </div>
+          )
+          }            
+      }   
     }
 
 }
-
-
-
-
-
-//Input --> the user gives the name of the pokemon of which he wants to know some information 
-//Output --> a card with the image of the pokemon, its caracteristics
-  //category
-  //Name
-  //Talent
-  //High
-  //Weight
-  //Sex
-  //Type 
-  //Weakness
-  //Evolution and link towards the other pokemons in which it can evolve
-  //List of differents moves it can have (search bar)
-
 
 
 
