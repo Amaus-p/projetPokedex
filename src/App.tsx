@@ -56,12 +56,15 @@ class App extends Component {
       const {pokeId, pokeName, pokeType, pokeAbility1, pokeAbility2, pokeCategory, pokeHeight,pokeWeight, pokePhotoBack, pokePhotoFront,Next,init} = this.state;
       let {ID} = this.state;
 
-      if (init===false){
-        <div style={{textAlign: "center",}}>
+      if (init===false) {
+        return(
+          <div style={{textAlign: "center",}}>
           <h1> Pokédex </h1> <br/>
           <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')}/>
           <button onClick={this.handleClick} >Rechercher</button>
         </div>
+        )
+
 
       }
 
@@ -75,11 +78,11 @@ class App extends Component {
               <h2> {pokeName} No {pokeId} </h2><br/>
               <img src = {pokePhotoFront}/>
               <img src = {pokePhotoBack}/>
-              <h3>Taille : 0.{pokeHeight}m</h3><br/>
-              <h3>Poids : {pokeWeight}kg</h3><br/>
-              <h3>Catégorie : {pokeCategory}</h3><br/>
-              <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3><br/>
-              <h3>Type : {pokeType}</h3><br/>   
+              <h3>Taille : 0.{pokeHeight}m</h3>
+              <h3>Poids : {pokeWeight}kg</h3>
+              <h3>Catégorie : {pokeCategory}</h3>
+              <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
+              <h3>Type : {pokeType}</h3> 
             </div>
             )
           }
@@ -96,11 +99,11 @@ class App extends Component {
                   <h2> {pokeName} No {pokeId} </h2><br/>
                   <img src = {pokePhotoFront}/>
                   <img src = {pokePhotoBack}/>
-                  <h3>Taille : 0.{pokeHeight}m</h3><br/>
-                  <h3>Poids : {pokeWeight}kg</h3><br/>
-                  <h3>Catégorie : {pokeCategory}</h3><br/>
-                  <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3><br/>
-                  <h3>Type : {pokeType}</h3><br/>          
+                  <h3>Taille : 0.{pokeHeight}m</h3>
+                  <h3>Poids : {pokeWeight}kg</h3>
+                  <h3>Catégorie : {pokeCategory}</h3>
+                  <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
+                  <h3>Type : {pokeType}</h3>       
               </div>
           )
           }            
