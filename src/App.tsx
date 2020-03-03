@@ -10,6 +10,7 @@ class App extends Component {
           pokeName : '',
           pokeType : '',
           pokeCategory : '',
+          pokeDescription: '',
           pokeHeight : '',
           pokeWeight : '',
           pokeAbility1 : '',
@@ -29,7 +30,7 @@ class App extends Component {
           init: false,              //clear the page if init = false
       }    
   
-    // function for binding but I don't understand why do we have to bind it
+
     // in tsx arguments' type have to be indicated in the brackets
     getPokeData = (ID : number | string) => {
         fetch(`https://pokeapi.co/api/v2/pokemon/${ID}/`)
@@ -37,6 +38,7 @@ class App extends Component {
           return response.json();
         })          
         .then((data) => {this.setState({
+          ID : data.id,
           pokeId : data.id,
           pokeName : data.name.toUpperCase(),
           pokeType : data.types[0].type.name,
@@ -48,8 +50,21 @@ class App extends Component {
           pokePhotoBack : data.sprites.back_default,
           pokePhotoFront : data.sprites.front_default,
           Next : false,
+        })
+        this.getPokeCaracteristics (this.state.pokeId) })
+      }
+
+
+      getPokeCaracteristics (id : number) {
+        fetch(`https://pokeapi.co/api/v2/characteristic/${id}/`)
+        .then((response) => {
+          return response.json();
+        })          
+        .then((data) => {this.setState({
+          pokeDescription : data.descriptions[0].description,
         })})
       }
+
 
       getPokeSpeciesData = (ID : number | string) => {
         fetch(`https://pokeapi.co/api/v2/pokemon-species/${ID}/`)
@@ -137,7 +152,7 @@ class App extends Component {
 
     render () {
 
-      const {pokeId, pokeName, pokeType, pokeAbility1, pokeAbility2, pokeCategory, pokeHeight,pokeWeight, 
+      const {pokeId, pokeName, pokeType, pokeAbility1, pokeAbility2, pokeCategory,pokeDescription, pokeHeight,pokeWeight, 
               pokePhotoBack, pokePhotoFront,Next,init,familyID1,familyID2,familyID3,familyName1,familyName2,familyName3,
               familyPhoto1, familyPhoto2, familyPhoto3} = this.state;
       let {ID} = this.state;
@@ -158,11 +173,12 @@ class App extends Component {
           return(
             <div style={{textAlign: "center",}}>
               <h1> Pokédex </h1> <br/>
-              <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')}/>
+              <input type="text" placeholder = 'ID ou nom du pokemon' value={this.state.ID} onChange={this.handleChange('ID')}/>
               <button onClick={this.handleClick()} >Rechercher</button>
               <h2> {pokeName} No {pokeId} </h2><br/>
               <img src = {pokePhotoFront}/>
               <img src = {pokePhotoBack}/>
+              <h3> Description: {pokeDescription}</h3>
               <h3>Taille : 0.{pokeHeight}m</h3>
               <h3>Poids : {pokeWeight}kg</h3>
               <h3>Catégorie : {pokeCategory}</h3>
@@ -192,25 +208,33 @@ class App extends Component {
             this.getPokeData(ID);
             this.getPokeSpeciesData(ID);
             return(
-              <div style={{textAlign: "center",}}> 
-                <h1> Pokédex </h1> <br/>
-                <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')} />
-                <button onClick={this.handleClick()} >Rechercher</button>
-                  <h2> {pokeName} No {pokeId} </h2><br/>
-                  <img src = {pokePhotoFront}/>
-                  <img src = {pokePhotoBack}/>
-                  <h3>Taille : 0.{pokeHeight}m</h3>
-                  <h3>Poids : {pokeWeight}kg</h3>
-                  <h3>Catégorie : {pokeCategory}</h3>
-                  <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
-                  <h3>Type : {pokeType}</h3>     
-                  <h2> Evolution </h2><br/>
-                    <img src = {familyPhoto1} alt = {familyName1}/> <h3>{familyName1} No {familyID1}</h3>
-                    <img src = {familyPhoto2} alt = {familyName2}/> <h3>{familyName2} No {familyID2}</h3>
-                    <img src = {familyPhoto3} alt = {familyName3}/> <h3>{familyName3} No {familyID3}</h3>
-
-
-              </div>
+              <div style={{textAlign: "center",}}>
+              <h1> Pokédex </h1> <br/>
+              <input type="text" placeholder = 'ID ou nom du pokemon' value={this.state.ID} onChange={this.handleChange('ID')}/>
+              <button onClick={this.handleClick()} >Rechercher</button>
+              <h2> {pokeName} No {pokeId} </h2><br/>
+              <img src = {pokePhotoFront}/>
+              <img src = {pokePhotoBack}/>
+              <h3> Description: {pokeDescription}</h3>
+              <h3>Taille : 0.{pokeHeight}m</h3>
+              <h3>Poids : {pokeWeight}kg</h3>
+              <h3>Catégorie : {pokeCategory}</h3>
+              <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
+              <h3>Type : {pokeType}</h3> <br/>
+              <h2> Evolution </h2>
+              <button onClick ={this.handleClick(true,familyID1)}>
+                <img src = {familyPhoto1} alt = {familyName1}/> 
+                <h3>{familyName1} No {familyID1}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID2)}>
+                <img src = {familyPhoto2} alt = {familyName2} onClick ={this.handleChange(familyID2)}/> 
+                <h3>{familyName2} No {familyID2}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID3)}>
+                <img src = {familyPhoto3} alt = {familyName3} onClick ={this.handleChange(familyID3)}/> 
+                <h3>{familyName3} No {familyID3}</h3>
+              </button>
+            </div>
           )
           }            
       }   
