@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes, { array } from 'prop-types';
+import PropTypes, { array, string, number } from 'prop-types';
 import './App.css';
 
 class App extends Component {
@@ -16,9 +16,15 @@ class App extends Component {
           pokeAbility2 : '',
           pokePhotoBack : '',
           pokePhotoFront : '',
-          familyMember1 : ['' , 0, '']  ,    // Name, ID, photo
-          familyMember2 : ['' , 0, ''] ,      //LA COMMANDE SCR LIGNE 150 A UN PROBLEME AVEC QQCH DANS CETTE STRUCTURE DE DONNEES?
-          familyMember3 : ['' , 0, ''] ,      
+          familyName1: '',                  //name of the first pokemon in the evolution branch of {pokemonName}
+          familyName2:'',
+          familyName3:'',
+          familyID1:-1,                     //ID of the first pokemon in the evolution branch of {pokemonName}
+          familyID2:-1,
+          familyID3:-1,
+          familyPhoto1:'',                  //front photo of the first pokemon in the evolution branch of {pokemonName}
+          familyPhoto2:'',
+          familyPhoto3:'',      
           Next : false,             //allows to stick to one pokemon in the pokedex
           init: false,              //clear the page if init = false
       }    
@@ -58,9 +64,9 @@ class App extends Component {
               })          
               .then((data) => {
             this.setState({
-              familyMember1 : [data.chain.species.name,this.state.familyMember1[1],this.state.familyMember1[2]],
-              familyMember2 : [data.chain.evolves_to[0].species.name,this.state.familyMember2[1],this.state.familyMember2[2]],
-              familyMember3 : [data.chain.evolves_to[0].evolves_to[0].species.name,this.state.familyMember2[1],this.state.familyMember2[2]],
+              familyName1 : data.chain.species.name,
+              familyName2 : data.chain.evolves_to[0].species.name,
+              familyName3 : data.chain.evolves_to[0].evolves_to[0].species.name,
              })
              this.getFamilyInfo()
           })
@@ -68,63 +74,79 @@ class App extends Component {
       }
 
       getFamilyInfo = () => {
-        const {familyMember1,familyMember2,familyMember3} =this.state
-        fetch(`https://pokeapi.co/api/v2/pokemon/${familyMember1[0]}/`)
+        fetch(`https://pokeapi.co/api/v2/pokemon/${this.state.familyName1}/`)
         .then((response) => {
           return response.json();
         })          
         .then((data) => {
 
           this.setState({
-            familyMember1 : [familyMember1[0],data.id,data.sprites.front_default]
+            familyID1: data.id,
+            familyPhoto1 : data.sprites.front_default,
         })
         })
-        fetch(`https://pokeapi.co/api/v2/pokemon/${familyMember2[0]}/`)
+        fetch(`https://pokeapi.co/api/v2/pokemon/${this.state.familyName2}/`)
         .then((response) => {
           return response.json();
         })          
         .then((data) => {
 
           this.setState({
-            familyMember2 : [familyMember2[0],data.id,data.sprites.front_default]
-        })})
-        fetch(`https://pokeapi.co/api/v2/pokemon/${familyMember3[0]}/`)
+            familyID2: data.id,
+            familyPhoto2 : data.sprites.front_default,
+        })
+        })
+        fetch(`https://pokeapi.co/api/v2/pokemon/${this.state.familyName3}/`)
         .then((response) => {
           return response.json();
         })          
         .then((data) => {
 
           this.setState({
-            familyMember3 : [familyMember3[0],data.id,data.sprites.front_default]
-        })})
+            familyID3: data.id,
+            familyPhoto3 : data.sprites.front_default,
+        })
+        })
       }
     
 
 
-    //fx for binding
+    //fx for binding set state of the ID when it the box is filled
     handleChange = (input : string | number) => (event : any) => {
         this.setState({[input]: event.target.value});
       };
 
     //fx to change the pokémon we are looking at in the pokedex on click
-    handleClick = () => this.setState ({
+    handleClick = (change : boolean = false, id : string|number = '') => ()=> {
+      console.log(change, id)
+      if (change){                        //when we click on the button of a family member of {pokemonName},  
+        this.setState ({                  //it changes the pokemon on which we are focused
+          Next : !this.state.Next,
+          init : true, 
+          ID : id}) ;
+
+      }
+      else{
+        this.setState ({
         Next : !this.state.Next,
         init : true }) ;
+      }
+    }
+
+
 
     render () {
 
       const {pokeId, pokeName, pokeType, pokeAbility1, pokeAbility2, pokeCategory, pokeHeight,pokeWeight, 
-              pokePhotoBack, pokePhotoFront,Next,init,familyMember1,familyMember2,familyMember3} = this.state;
+              pokePhotoBack, pokePhotoFront,Next,init,familyID1,familyID2,familyID3,familyName1,familyName2,familyName3,
+              familyPhoto1, familyPhoto2, familyPhoto3} = this.state;
       let {ID} = this.state;
-      let url1 = familyMember1[2];
-      console.log(familyMember1)
-      console.log(3)
       if (init===false) {
         return(
           <div style={{textAlign: "center",}}>
           <h1> Pokédex </h1> <br/>
           <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')}/>
-          <button onClick={this.handleClick} >Rechercher</button>
+          <button onClick={this.handleClick()} >Rechercher</button>
         </div>
         )
 
@@ -137,7 +159,7 @@ class App extends Component {
             <div style={{textAlign: "center",}}>
               <h1> Pokédex </h1> <br/>
               <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')}/>
-              <button onClick={this.handleClick} >Rechercher</button>
+              <button onClick={this.handleClick()} >Rechercher</button>
               <h2> {pokeName} No {pokeId} </h2><br/>
               <img src = {pokePhotoFront}/>
               <img src = {pokePhotoBack}/>
@@ -147,10 +169,18 @@ class App extends Component {
               <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
               <h3>Type : {pokeType}</h3> <br/>
               <h2> Evolution </h2>
-              <img src = {familyMember1[2]}/> <img src = {familyMember2[2]}/> <img src = {familyMember3[2]}/>
-              <h3> {familyMember1[0]} No {familyMember1[1]}  
-              {familyMember2[0]}  No {familyMember2[1]}  
-              {familyMember3[0]} No{familyMember3[1]} </h3>
+              <button onClick ={this.handleClick(true,familyID1)}>
+                <img src = {familyPhoto1} alt = {familyName1}/> 
+                <h3>{familyName1} No {familyID1}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID2)}>
+                <img src = {familyPhoto2} alt = {familyName2} onClick ={this.handleChange(familyID2)}/> 
+                <h3>{familyName2} No {familyID2}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID3)}>
+                <img src = {familyPhoto3} alt = {familyName3} onClick ={this.handleChange(familyID3)}/> 
+                <h3>{familyName3} No {familyID3}</h3>
+              </button>
             </div>
             )
           }
@@ -161,13 +191,11 @@ class App extends Component {
             
             this.getPokeData(ID);
             this.getPokeSpeciesData(ID);
-            console.log(familyMember1)
-            console.log(4)
             return(
               <div style={{textAlign: "center",}}> 
                 <h1> Pokédex </h1> <br/>
                 <input type="text" placeholder = 'Entrez le nom ou numéro de votre pokémon' value={this.state.ID} onChange={this.handleChange('ID')} />
-                <button onClick={this.handleClick} >Rechercher</button>
+                <button onClick={this.handleClick()} >Rechercher</button>
                   <h2> {pokeName} No {pokeId} </h2><br/>
                   <img src = {pokePhotoFront}/>
                   <img src = {pokePhotoBack}/>
@@ -177,10 +205,9 @@ class App extends Component {
                   <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
                   <h3>Type : {pokeType}</h3>     
                   <h2> Evolution </h2><br/>
-                  <img src = {familyMember1[2]} alt={familyMember1[0]}/> <img src = {familyMember2[2]}/> <img src = {familyMember3[2]}/>
-                  <h3> {familyMember1[0]} No {familyMember1[1]}  
-                  {familyMember2[0]}  No {familyMember2[1]}  
-                  {familyMember3[0]} No{familyMember3[1]} </h3>
+                    <img src = {familyPhoto1} alt = {familyName1}/> <h3>{familyName1} No {familyID1}</h3>
+                    <img src = {familyPhoto2} alt = {familyName2}/> <h3>{familyName2} No {familyID2}</h3>
+                    <img src = {familyPhoto3} alt = {familyName3}/> <h3>{familyName3} No {familyID3}</h3>
 
 
               </div>
@@ -193,4 +220,3 @@ class App extends Component {
 
 //<img src = {familyMember1[2]}/> <img src = {familyMember2[2]}/> <img src = {familyMember3[2]}/>
 export default App;
-
