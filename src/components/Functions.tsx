@@ -1,5 +1,3 @@
-import React from 'react';
-
 
     // in tsx arguments' type have to be indicated in the brackets
     export function getPokeData (ID : number | string) {
@@ -19,12 +17,14 @@ import React from 'react';
          //there was a call of get getPokeCaracteristics
 
 
-    export function getPokeCaracteristics (id : number) {
+    export function getPokeCaracteristics (id : number |string) {
+      return(
         fetch(`https://pokeapi.co/api/v2/characteristic/${id}/`)
         .then((response) => {
           return response.json();
         })          
-        .then((data) => {return (data.descriptions[0].description)})
+        .then((data) => {if (data!==undefined) {
+          return (data.descriptions[0].description)}}))
       }
 
       //pokeDescription 
@@ -32,21 +32,23 @@ import React from 'react';
 
     export function getPokeSpeciesData (ID : number | string, familyNames : Array<string>, 
         familyPhotos : Array<string>, familyIDs: Array<number>) {
-        
+        return(
         fetch(`https://pokeapi.co/api/v2/pokemon-species/${ID}/`)
           .then((response) => {
             return response.json();
           })          
           .then((data) => {
               let url = data.evolution_chain.url;    //gives the url of the evolution chain in order to make the 
-              fetch(url)
+              return(fetch(url)
               .then((response) => {
                 return response.json();
               })          
               .then((data) => {
-             return(url)
-            })
-        })
+                
+                return([url, getFamilyInfos(data, familyNames, familyPhotos, familyIDs)] )
+             
+            }))
+        }))
       }
       //familyUrl
       
@@ -59,7 +61,7 @@ import React from 'react';
         getFamilyPokeInfos (name, familyPhotos, familyIDs);
         while (!exit){
           familyNames.push(name);         
-          if (data.length!=undefined && data.length != 0){
+          if (data.length!==undefined && data.length !== 0){
             for (let i=0; i<data.length; i++){
               name = data[i].species.name;
               getFamilyPokeInfos (name, familyPhotos, familyIDs);
@@ -68,6 +70,7 @@ import React from 'react';
           }
           else {
             exit = true
+            return(false)
           }
                 
         }
