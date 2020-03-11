@@ -5,7 +5,7 @@ import '../App.css';
 
 class Favorites extends Component{
 
-    render(){
+    render(){/*
 
         let listOfFavoritesPokemons = [25,3 ,7 ,6];         //list of the IDs of the pokemons
         let listOfPokemonData:Array<any> = [] ;                 //list of the data of the pokemons--> dictionnaries as in App
@@ -28,14 +28,14 @@ class Favorites extends Component{
                 listOfPokemonData.concat({'ID': data[0], 'name': data[1], 'photo':data[9]})})
             
         });
-        console.log(listOfPokemonData)
-        if (listOfPokemonData.length && listOfPokemonData[0].photo){
+        console.log(listOfPokemonData.length && listOfPokemonData[0].photo)
+
+        if (listOfPokemonData.length && listOfPokemonData[0].photo){*/
             return(
                 <div>
                     <button>
                         work in progress
-                        <img src = {'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'} alt = {'Pikachu'}/> 
-                        <h3>{'Pikachu'} No {25}</h3>
+                    
                     </button>
                 </div>
                
@@ -44,7 +44,7 @@ class Favorites extends Component{
         }
         
     }
-}
+
 
 export default Favorites
 

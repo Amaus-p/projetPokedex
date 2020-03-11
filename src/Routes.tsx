@@ -1,26 +1,51 @@
-import { Component } from "react";
-import { Route, Switch, Router } from "react-router-dom";
-import React from "react";
-
 import createHistory from 'history/createBrowserHistory';
 
 import App from './App'
 import Favorites from "./pages/favorites";
 
-const history = createHistory();
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-class Routes extends Component{
-    render (){
-        return(
-            <Router history={history}>
-                <Switch>
-                    <Route exact path="/" component={App} />
-                    <Route exact path='/favorites' component={Favorites}/>
-                </Switch>   
-            </Router>
-        
+export default function Routes() {
+  return (
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/favorites">Favorites</Link>
+            </li>
+          </ul>
+        </nav>
 
-        )
-    }
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        <Switch>
+          <Route path="/favorites">
+            <About />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
 }
-export default Routes
+
+function Home() {
+  return <App/>;
+}
+
+function About() {
+  return <Favorites/>;
+}
+
