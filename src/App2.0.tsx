@@ -91,14 +91,13 @@ class App extends Component {
         let name :string = data.chain.species.name;
         data = data.chain.evolves_to; 
         this.getFamilyPokeInfos (name);
-        let list = this.state.familyName.concat(name)
         while (!exit){
-             
+
+          this.state.familyName.push(name);         
           if (data.length!=undefined && data.length != 0){
             for (let i=0; i<data.length; i++){
               name = data[i].species.name;
               this.getFamilyPokeInfos (name);
-              list =list.concat(name)
             }
             data=data[0].evolves_to;
           }
@@ -107,7 +106,6 @@ class App extends Component {
           }
                 
         }
-        this.setState({familyName : list}); 
       }
       
       getFamilyPokeInfos = (name:string) => {
@@ -116,13 +114,8 @@ class App extends Component {
             return response.json();
           })          
           .then((data) => {
-            let list1 = this.state.familyID.concat(data.id);
-            let list2 = this.state.familyPhoto.concat(data.sprites.front_default);
-            this.setState({
-              familyID : list1,
-              familyPhoto : list2,
-            })
-          
+            this.state.familyID.push(data.id);
+            this.state.familyPhoto.push(data.sprites.front_default);            
          })
       }   
 
@@ -134,14 +127,11 @@ class App extends Component {
 
     //fx to change the pokémon we are looking at in the pokedex on click
     handleClick = (change : boolean = false, id : string|number = '') => ()=> {
-      
+      console.log(change, id)
       if (change){                        //when we click on the button of a family member of {pokemonName},  
         this.setState ({                  //it changes the pokemon on which we are focused
           Next : !this.state.Next,
           ID : id,
-          loadingData:true,
-          loadingFamilyData: false,
-          pokeDescription:'No description avalable',
           familyName: [''],
           familyID:[-1],
           familyPhoto:[''],
@@ -152,9 +142,6 @@ class App extends Component {
         this.setState ({
         Next : !this.state.Next,
         init : true,
-        loadingData:true,
-        loadingFamilyData : false,
-        pokeDescription:'No description avalable',
         familyName: [''],
         familyID:[-1],
         familyPhoto:[''], }) ;
@@ -178,8 +165,9 @@ class App extends Component {
 
       else if (init===true) {
         if (Next===false){      // pour garder ce pokémon sur la page jusqu'au prochain clic sur "rechercher"
-        console.log(pokePhotoFront)
+        console.log(familyID)
           return(
+          
             
               <div style={{textAlign: "center",}}>
                 
@@ -191,7 +179,7 @@ class App extends Component {
                 <img src = {pokePhotoFront}/>
                 <img src = {pokePhotoBack}/>
                 <h3> Description: {pokeDescription}</h3>
-                <h3>Taille : {pokeHeight}m</h3>
+                <h3>Taille : 0.{pokeHeight}m</h3>
                 <h3>Poids : {pokeWeight}kg</h3>
                 <h3>Catégorie : {pokeCategory}</h3>
                 <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
@@ -220,47 +208,38 @@ class App extends Component {
   
         else if (Next ===true )
           {
-            if (loadingData || loadingFamilyData ){
-              this.getPokeData(ID);
-              this.getPokeSpeciesData(ID)
-              return(
-                  <div className='Center'>
-                  <CircularProgress>
-                  </CircularProgress>
-                  </div>)
-              }
-            else{
-              return(
-                <div style={{textAlign: "center",}}>
-                <h1> Pokédex </h1> <br/>
-                <input type="text" placeholder = 'ID ou nom du pokemon' value={this.state.ID} onChange={this.handleChange('ID')}/>
-                <button onClick={this.handleClick()} >Rechercher</button>
-                <h2> {pokeName} No {pokeId} </h2><br/>
-                <img src = {pokePhotoFront}/>
-                <img src = {pokePhotoBack}/>
-                <h3> Description: {pokeDescription}</h3>
-                <h3>Taille : {pokeHeight}m</h3>
-                <h3>Poids : {pokeWeight}kg</h3>
-                <h3>Catégorie : {pokeCategory}</h3>
-                <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
-                <h3>Type : {pokeType}</h3> <br/>
-                <h2> Evolution </h2>
-                <button onClick ={this.handleClick(true,familyID[1])}>
-                    <img src = {familyPhoto[1]} alt = {familyName[1]}/> 
-                    <h3>{familyName[1]} No {familyID[1]}</h3>
-                </button>
-                <button onClick ={this.handleClick(true,familyID[2])}>
-                    <img src = {familyPhoto[2]} alt = {familyName[2]}/> 
-                    <h3>{familyName[2]} No {familyID[2]}</h3>
-                </button>
-                <button onClick ={this.handleClick(true,familyID[3])}>
-                    <img src = {familyPhoto[3]} alt = {familyName[3]}/> 
-                    <h3>{familyName[3]} No {familyID[3]}</h3>
-                </button>
-              </div>
-            )
-            }
-            
+
+            this.getPokeData(ID);
+            this.getPokeSpeciesData(ID);
+            return(
+              <div style={{textAlign: "center",}}>
+              <h1> Pokédex </h1> <br/>
+              <input type="text" placeholder = 'ID ou nom du pokemon' value={this.state.ID} onChange={this.handleChange('ID')}/>
+              <button onClick={this.handleClick()} >Rechercher</button>
+              <h2> {pokeName} No {pokeId} </h2><br/>
+              <img src = {pokePhotoFront}/>
+              <img src = {pokePhotoBack}/>
+              <h3> Description: {pokeDescription}</h3>
+              <h3>Taille : 0.{pokeHeight}m</h3>
+              <h3>Poids : {pokeWeight}kg</h3>
+              <h3>Catégorie : {pokeCategory}</h3>
+              <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
+              <h3>Type : {pokeType}</h3> <br/>
+              <h2> Evolution </h2>
+              <button onClick ={this.handleClick(true,familyID[1])}>
+                  <img src = {familyPhoto[1]} alt = {familyName[1]}/> 
+                  <h3>{familyName[1]} No {familyID[1]}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID[2])}>
+                  <img src = {familyPhoto[2]} alt = {familyName[2]}/> 
+                  <h3>{familyName[2]} No {familyID[2]}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID[3])}>
+                  <img src = {familyPhoto[3]} alt = {familyName[3]}/> 
+                  <h3>{familyName[3]} No {familyID[3]}</h3>
+              </button>
+            </div>
+          )
           }            
       }   
     }

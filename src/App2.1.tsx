@@ -178,9 +178,8 @@ class App extends Component {
 
       else if (init===true) {
         if (Next===false){      // pour garder ce pokémon sur la page jusqu'au prochain clic sur "rechercher"
-        console.log(pokePhotoFront)
+        console.log(familyID)
           return(
-            
               <div style={{textAlign: "center",}}>
                 
                 <h1> Pokédex </h1> <br/>
@@ -220,47 +219,38 @@ class App extends Component {
   
         else if (Next ===true )
           {
-            if (loadingData || loadingFamilyData ){
-              this.getPokeData(ID);
-              this.getPokeSpeciesData(ID)
-              return(
-                  <div className='Center'>
-                  <CircularProgress>
-                  </CircularProgress>
-                  </div>)
-              }
-            else{
-              return(
-                <div style={{textAlign: "center",}}>
-                <h1> Pokédex </h1> <br/>
-                <input type="text" placeholder = 'ID ou nom du pokemon' value={this.state.ID} onChange={this.handleChange('ID')}/>
-                <button onClick={this.handleClick()} >Rechercher</button>
-                <h2> {pokeName} No {pokeId} </h2><br/>
-                <img src = {pokePhotoFront}/>
-                <img src = {pokePhotoBack}/>
-                <h3> Description: {pokeDescription}</h3>
-                <h3>Taille : {pokeHeight}m</h3>
-                <h3>Poids : {pokeWeight}kg</h3>
-                <h3>Catégorie : {pokeCategory}</h3>
-                <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
-                <h3>Type : {pokeType}</h3> <br/>
-                <h2> Evolution </h2>
-                <button onClick ={this.handleClick(true,familyID[1])}>
-                    <img src = {familyPhoto[1]} alt = {familyName[1]}/> 
-                    <h3>{familyName[1]} No {familyID[1]}</h3>
-                </button>
-                <button onClick ={this.handleClick(true,familyID[2])}>
-                    <img src = {familyPhoto[2]} alt = {familyName[2]}/> 
-                    <h3>{familyName[2]} No {familyID[2]}</h3>
-                </button>
-                <button onClick ={this.handleClick(true,familyID[3])}>
-                    <img src = {familyPhoto[3]} alt = {familyName[3]}/> 
-                    <h3>{familyName[3]} No {familyID[3]}</h3>
-                </button>
-              </div>
-            )
-            }
-            
+
+            this.getPokeData(ID);
+            this.getPokeSpeciesData(ID);
+            return(
+              <div style={{textAlign: "center",}}>
+              <h1> Pokédex </h1> <br/>
+              <input type="text" placeholder = 'ID ou nom du pokemon' value={this.state.ID} onChange={this.handleChange('ID')}/>
+              <button onClick={this.handleClick()} >Rechercher</button>
+              <h2> {pokeName} No {pokeId} </h2><br/>
+              <img src = {pokePhotoFront}/>
+              <img src = {pokePhotoBack}/>
+              <h3> Description: {pokeDescription}</h3>
+              <h3>Taille : {pokeHeight}m</h3>
+              <h3>Poids : {pokeWeight}kg</h3>
+              <h3>Catégorie : {pokeCategory}</h3>
+              <h3>Talent : {pokeAbility1} , {pokeAbility2}</h3>
+              <h3>Type : {pokeType}</h3> <br/>
+              <h2> Evolution </h2>
+              <button onClick ={this.handleClick(true,familyID[1])}>
+                  <img src = {familyPhoto[1]} alt = {familyName[1]}/> 
+                  <h3>{familyName[1]} No {familyID[1]}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID[2])}>
+                  <img src = {familyPhoto[2]} alt = {familyName[2]}/> 
+                  <h3>{familyName[2]} No {familyID[2]}</h3>
+              </button>
+              <button onClick ={this.handleClick(true,familyID[3])}>
+                  <img src = {familyPhoto[3]} alt = {familyName[3]}/> 
+                  <h3>{familyName[3]} No {familyID[3]}</h3>
+              </button>
+            </div>
+          )
           }            
       }   
     }
