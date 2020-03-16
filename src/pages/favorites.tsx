@@ -1,20 +1,28 @@
 import React, {Component} from 'react';
 import {getPokeData} from '.././components/Functions'
-
+import CircularProgress from '@material-ui/core/CircularProgress'
 import '../App.css';
 
-class Favorites extends Component{
+interface State{
+    listOfFavoritesPokemons: number[],
+    listOfPokemonData : Array<Array<any>>,                        //list of the data of the pokemons--> dictionnaries as in App
+    fetched : boolean,
 
-    render(){/*
+}
 
-        let listOfFavoritesPokemons = [25,3 ,7 ,6];         //list of the IDs of the pokemons
-        let listOfPokemonData:Array<any> = [] ;                 //list of the data of the pokemons--> dictionnaries as in App
-
-        listOfFavoritesPokemons.forEach(element => {
+class Favorites extends Component<State>{
+    state: Readonly<State>= {
+        listOfFavoritesPokemons : [25,3 ,7 ,6],         //list of the IDs of the pokemons
+        listOfPokemonData : [],                        //list of the data of the pokemons--> dictionnaries as in App
+        fetched : false,
+    }
+    
+    getPokeFavoritesData = () => {
+        this.state.listOfFavoritesPokemons.forEach(element => {
             getPokeData(element)        
                 .then((data) => {
-                console.log(data)
-                let pokeId = data[0];
+                
+                /*let pokeId = data[0];
                 let pokeName = data[1];
                 let pokeType = data[2];
                 let pokeAbility1 = data[3];
@@ -24,26 +32,57 @@ class Favorites extends Component{
                 let pokeWeight = data[7];
                 let pokePhotoBack = data[8];
                 let pokePhotoFront = data[9];
-                let Next = data[10];
-                listOfPokemonData.concat({'ID': data[0], 'name': data[1], 'photo':data[9]})})
-            
-        });
-        console.log(listOfPokemonData.length && listOfPokemonData[0].photo)
-
-        if (listOfPokemonData.length && listOfPokemonData[0].photo){*/
-            return(
-                <div>
-                    <button>
-                        work in progress
-                    
-                    </button>
-                </div>
-               
+                let Next = data[10];*/
+                console.log('this')
+                console.log(this)
+                this.setState({
+                    listOfPokemonData : this.state.listOfPokemonData.concat([data]),
+                    fetched : true})
                 
-            )
+                })
+            })
+    }
+
+
+    render(){
+        
+           
+        let {fetched, listOfPokemonData,listOfFavoritesPokemons}=this.state;
+        console.log('listOfPokemonData')
+        console.log(listOfPokemonData)
+        console.log('listOfFavoritesPokemons')
+        console.log(listOfFavoritesPokemons)
+        if (fetched===false){
+                this.getPokeFavoritesData()
+                console.log(fetched)
+                console.log('listOfPokemonData')
+                console.log(listOfPokemonData)
+                return(
+                    <div className='Center'>
+                    <CircularProgress>
+                    </CircularProgress>
+                    </div>)
         }
         
-    }
+        return(
+            <div>
+                {listOfPokemonData.map(data => 
+                    <div>
+                    <button>
+                        <img src = {data[9]} alt = {data[1]}/> 
+                        <h3>{data[1]} No {data[0]}</h3>
+                    </button>
+                </div>)}
+            </div>)
+        
+        
+
+           
+                }
+            
+        }
+    
+    
 
 
 export default Favorites
