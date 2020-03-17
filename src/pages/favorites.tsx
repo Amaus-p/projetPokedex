@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
-import {getPokeData} from '.././components/Functions'
+import {getPokeData} from '../components/Functions'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import '../App.css';
+
 
 interface State{
     listOfFavoritesPokemons: number[],
-    listOfPokemonData : Array<Array<any>>,                        //list of the data of the pokemons--> dictionnaries as in App
+    listOfPokemonData : Array<Map<string,any>>,                        //list of the data of the pokemons--> dictionnaries as in App
     fetched : boolean,
 
 }
 
-class Favorites extends Component<State>{
+class Favorites extends Component{
+
     state: Readonly<State>= {
-        listOfFavoritesPokemons : [25,3 ,7 ,6],         //list of the IDs of the pokemons
+        listOfFavoritesPokemons : [1,2,3,4,5,6,7,8,9,10,20,21,22,23,24,25],         //list of the IDs of the pokemons
         listOfPokemonData : [],                        //list of the data of the pokemons--> dictionnaries as in App
         fetched : false,
     }
@@ -33,10 +34,22 @@ class Favorites extends Component<State>{
                 let pokePhotoBack = data[8];
                 let pokePhotoFront = data[9];
                 let Next = data[10];*/
-                console.log('this')
-                console.log(this)
+                console.log('thisfdf')
+                console.log(data[0])
+                let newMap = new Map();
+                newMap.set("pokeId", data[0]);
+                newMap.set("pokeName", data[1]);
+                newMap.set("pokeType", data[2]);
+                newMap.set("pokeAbility1", data[3]);
+                newMap.set("pokeAbility2", data[4]);
+                newMap.set("pokeCategory", data[5]);
+                newMap.set("pokeHeight", data[6]);
+                newMap.set("pokeWeight", data[7]);
+                newMap.set("pokePhotoBack", data[8]);
+                newMap.set("pokePhotoFront", data[9]);
+                
                 this.setState({
-                    listOfPokemonData : this.state.listOfPokemonData.concat([data]),
+                    listOfPokemonData : this.state.listOfPokemonData.concat([newMap]),
                     fetched : true})
                 
                 })
@@ -66,11 +79,11 @@ class Favorites extends Component<State>{
         
         return(
             <div>
-                {listOfPokemonData.map(data => 
+                {listOfPokemonData.map(Map => 
                     <div>
                     <button>
-                        <img src = {data[9]} alt = {data[1]}/> 
-                        <h3>{data[1]} No {data[0]}</h3>
+                        <img src = {Map.get("pokePhotoFront")} alt = {Map.get("pokeName")}/> 
+                        <h3>{Map.get("pokeName")} No {Map.get("pokeId")}</h3>
                     </button>
                 </div>)}
             </div>)

@@ -28,82 +28,75 @@
       }
 
       //pokeDescription 
-
-
-    export function getPokeSpeciesData (ID : number | string, familyData : Array<object>) {
+      
+    
+      export function getPokeSpeciesData (ID : number | string) {
         return(
         fetch(`https://pokeapi.co/api/v2/pokemon-species/${ID}/`)
           .then((response) => {
             return response.json();
           })          
-          .then((data) => {
-              let url = data.evolution_chain.url;    //gives the url of the evolution chain in order to make the 
-              return(fetch(url)
+          .then((data) => {            
+              let familyUrl : string = data.evolution_chain.url
+              return(fetch(familyUrl)
               .then((response) => {
                 return response.json();
               })          
-              .then((data) => {
-                
-                return([url, getFamilyInfos(data, familyData)] )
-             
-            }))
-        }))
+              .then((data) => {return(
+             getFamilyInfos (data))
+            })
+        )}))
       }
-      //familyUrl
       
-    export function getFamilyInfos (data : any, familyData : Array<object>) {
-        let okData=false
+      export function getFamilyInfos (data : any) {
+        
         let exit = false;                              // exit the loop when we have found every pokemon in the family
+        let pokeFamilyInfo : Array<Map<string,number|string>> = [];
         let name :string = data.chain.species.name;
         data = data.chain.evolves_to; 
-        let ID, photo;
-        debugger
-        
-        getFamilyPokeInfos (name).then(
-            data => (ID = data[0], photo=data[1], okData=data[2]));
-
-        
-        console.log(okData)
-        if (okData){
-          console.log(1)
-          console.log(name, photo, ID)
-          familyData.push({'name' : name, 'photo' : photo, 'ID' : ID})
-          console.log(familyData)
-          okData=false;
-          while (!exit){
-            //familyNames.push(name);         
-            if (data.length!==undefined && data.length !== 0){
-              for (let i=0; i<data.length; i++){
-                name = data[i].species.name;
-                getFamilyPokeInfos (name).then(data => (ID = data[0], photo=data[1], okData=data[2]));
-                familyData.push({'name' : name, 'photo' : photo, 'ID' : ID})
+        getFamilyPokeInfos(name)
+          .then(newMap => 
+                {console.log(pokeFamilyInfo.concat([newMap]))
+                pokeFamilyInfo = pokeFamilyInfo.concat([newMap])
+                console.log(pokeFamilyInfo)
+                }
+              )
+              console.log('gege')
+              console.log(pokeFamilyInfo)
+        while (!exit){
+         
+          if (data.length!==undefined && data.length !== 0){
+            for (let i=0; i<data.length; i++){
+              name = data[i].species.name;
+              getFamilyPokeInfos(name)
+                .then(newMap => 
+                  {console.log(newMap)
+                  pokeFamilyInfo= pokeFamilyInfo.concat([newMap])}
+              );
               }
-              data=data[0].evolves_to;
-            }
-            else {
-              exit = true
-              return(false)
-            }
-                
+            
+            data=data[0].evolves_to;
           }
+          else {
+            exit = true                
         }
-        
-
       }
-      //changes familyName put in entry
-
+      console.log(pokeFamilyInfo)
+      return(pokeFamilyInfo)
+      }
+      
     export function getFamilyPokeInfos (name:string) {
-      return(
+        return(
         fetch(`https://pokeapi.co/api/v2/pokemon/${name}/`)
           .then((response) => {
             return response.json();
           })          
-          .then((data) => { 
-            return([data.id, data.sprites.front_default, true])
-                
-         }))
+          .then((data) => {
+            let newMap= new Map();
+            newMap.set("pokeName", name)
+            newMap.set("pokeId", data.id)
+            newMap.set("pokePhoto", data.sprites.front_default)
+            return (newMap)}))
+          
       }   
-      //changes familyID and familyPhoto
-
-      
 

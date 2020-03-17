@@ -60,7 +60,7 @@
         data = data.chain.evolves_to; 
         getFamilyPokeInfos (name, familyPhotos, familyIDs);
         while (!exit){
-          familyNames.push(name);         
+          familyNames =familyNames.concat(name);         
           if (data.length!==undefined && data.length !== 0){
             for (let i=0; i<data.length; i++){
               name = data[i].species.name;

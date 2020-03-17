@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 
-import '../App.css';
+import '.././styles.scss';
 
 interface Props {
-    ID: string;
+    ID: string|number;
     handleClick: (change?: boolean, id?: React.Key) => () => void;
     handleChange: (input: string | number) => (event: any) => void;
   }

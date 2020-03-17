@@ -1,6 +1,5 @@
-import createHistory from 'history/createBrowserHistory';
 
-import App from './App'
+import App from './pages/NewHome'
 import Favorites from "./pages/favorites";
 
 import React from "react";
