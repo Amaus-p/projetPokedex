@@ -100,7 +100,7 @@ class App extends Component {
 
     //fx to change the pokémon we are looking at in the pokedex on click
     handleClick = (change : boolean = false, id : string|number = '') => ()=> {
-      console.log(this.state)
+ 
       if (change){                        //when we click on the button of a family member of {pokemonName},  
         this.setState ({                  //it changes the pokemon on which we are focused
           Next : !this.state.Next,

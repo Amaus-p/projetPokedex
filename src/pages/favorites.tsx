@@ -13,10 +13,11 @@ interface State{
 class Favorites extends Component{
 
     state: Readonly<State>= {
-        listOfFavoritesPokemons : [1,2,3,4,5,6,7,8,9,10,20,21,22,23,24,25],         //list of the IDs of the pokemons
+        listOfFavoritesPokemons : [1,7,8,23,25],         //list of the IDs of the pokemons
         listOfPokemonData : [],                        //list of the data of the pokemons--> dictionnaries as in App
         fetched : false,
     }
+
     
     getPokeFavoritesData = () => {
         this.state.listOfFavoritesPokemons.forEach(element => {
@@ -34,8 +35,7 @@ class Favorites extends Component{
                 let pokePhotoBack = data[8];
                 let pokePhotoFront = data[9];
                 let Next = data[10];*/
-                console.log('thisfdf')
-                console.log(data[0])
+                
                 let newMap = new Map();
                 newMap.set("pokeId", data[0]);
                 newMap.set("pokeName", data[1]);
@@ -61,15 +61,10 @@ class Favorites extends Component{
         
            
         let {fetched, listOfPokemonData,listOfFavoritesPokemons}=this.state;
-        console.log('listOfPokemonData')
-        console.log(listOfPokemonData)
-        console.log('listOfFavoritesPokemons')
-        console.log(listOfFavoritesPokemons)
+     
         if (fetched===false){
                 this.getPokeFavoritesData()
-                console.log(fetched)
-                console.log('listOfPokemonData')
-                console.log(listOfPokemonData)
+       
                 return(
                     <div className='Center'>
                     <CircularProgress>

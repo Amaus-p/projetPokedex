@@ -1,5 +1,8 @@
 
-    // in tsx arguments' type have to be indicated in the brackets
+
+
+  
+
     export function getPokeData (ID : number | string) {
       return(
         fetch(`https://pokeapi.co/api/v2/pokemon/${ID}/`)
@@ -56,13 +59,11 @@
         data = data.chain.evolves_to; 
         getFamilyPokeInfos(name)
           .then(newMap => 
-                {console.log(pokeFamilyInfo.concat([newMap]))
+                {
                 pokeFamilyInfo = pokeFamilyInfo.concat([newMap])
-                console.log(pokeFamilyInfo)
+                
                 }
-              )
-              console.log('gege')
-              console.log(pokeFamilyInfo)
+            )
         while (!exit){
          
           if (data.length!==undefined && data.length !== 0){
@@ -70,7 +71,7 @@
               name = data[i].species.name;
               getFamilyPokeInfos(name)
                 .then(newMap => 
-                  {console.log(newMap)
+                  {
                   pokeFamilyInfo= pokeFamilyInfo.concat([newMap])}
               );
               }
@@ -81,7 +82,7 @@
             exit = true                
         }
       }
-      console.log(pokeFamilyInfo)
+      
       return(pokeFamilyInfo)
       }
       
