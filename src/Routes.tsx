@@ -1,5 +1,5 @@
 
-import App from './pages/NewHomeDecoupage'
+import App from './pages/NewHome'
 import Favorites from "./pages/favorites";
 
 import React from "react";
